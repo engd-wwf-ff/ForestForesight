@@ -74,6 +74,7 @@ ff_run <- function(shape = NULL, country = NULL, prediction_dates=NULL,
                    verbose=T,
                    autoscale_sample = F,
                    validation = F) {
+  cat("Yippikayay!\n")
   fixed_sample_size <- 6e6
   sample_size <- 0.3
   if (!hasvalue(shape) & !hasvalue(country)) {stop("either input shape or country should be given")}
@@ -97,7 +98,6 @@ ff_run <- function(shape = NULL, country = NULL, prediction_dates=NULL,
     if ((lubridate::ymd(prediction_dates[1]) - lubridate::ymd(max(train_dates))) < 170 ) {ff_cat("There should be at least 6 months between training and testing/predicting",color="yellow")}
   }
 
-
   if (!terra::is.lonlat(shape)) {shape <- terra::project(shape, "epsg:4326")}
   data(gfw_tiles,envir = environment())
   tiles <- terra::vect(gfw_tiles)[shape,]$tile_id
@@ -107,12 +107,14 @@ ff_run <- function(shape = NULL, country = NULL, prediction_dates=NULL,
   if (!dir.exists(prep_folder)) {stop(paste(prep_folder,"does not exist"))}
 
 
-
   # Train model if not provided
   if (is.null(trained_model)) {
+    
+    cat("Training a model!\n")
     sample_size <- 0.3
     #ff prep to determine the sample size
     if (autoscale_sample & hasvalue(fltr_condition)){
+      cat("autoscale_sample & hasvalue(fltr_condition)\n")
       if (verbose) {ff_cat("Finding optimal sample size based on filter condition\n",color = "green")}
       ff_prep_params_original = list(datafolder = prep_folder, shape = shape, dates = train_dates,
                                      fltr_condition = fltr_condition,fltr_features = fltr_features,
@@ -120,7 +122,9 @@ ff_run <- function(shape = NULL, country = NULL, prediction_dates=NULL,
                                      groundtruth_pattern = "groundtruth6m",label_threshold = 1)
       ff_prep_params_combined = merge_lists(default = ff_prep_params_original, user = ff_prep_params)
       ff_prep_params_combined = merge_lists(default = ff_prep_params_combined, user = list("inc_features" = fltr_features, "adddate" = F, "addxy" = F, "verbose" = F))
+      cat("calling ff_prep with ff_prep_params_combined")
       traindata <- do.call(ff_prep, ff_prep_params_combined)
+      cat("ff_prep complete")
       if(validation){
         sample_size <- min(1,1.33*fixed_sample_size/length(traindata$data_matrix$features))
         if(verbose){ff_cat("adding validation matrix\n",color = "green")}
@@ -129,7 +133,7 @@ ff_run <- function(shape = NULL, country = NULL, prediction_dates=NULL,
       if (verbose) {ff_cat("autoscaled sample size:", round(sample_size,2),"\n",color = "green")}
     }
 
-
+    
 
     if (verbose) {ff_cat("Preparing data\n",color = "green");ff_cat("looking in folder",prep_folder,"\n",color = "green")}
     ff_prep_params_original = list(datafolder = prep_folder, shape = shape, dates=train_dates,

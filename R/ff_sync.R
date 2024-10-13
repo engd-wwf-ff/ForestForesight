@@ -52,6 +52,7 @@ ff_sync <- function(ff_folder, identifier, download_model = FALSE, download_data
     tiles <- tiles$tile_id
   } else {
     # Load necessary data sets
+    cat("The identifier is a country ", identifier, "\n")
     countries <- terra::vect(get(data("countries")))
     gfw_tiles <- terra::vect(get(data("gfw_tiles")))
 
