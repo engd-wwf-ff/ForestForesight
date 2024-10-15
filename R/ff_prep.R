@@ -73,8 +73,11 @@ ff_prep <- function(datafolder=NA, country=NA, shape=NA, tiles=NULL, groundtruth
   if (hasvalue(shape) & !class(shape) == "SpatVector") {stop("shape should be of class spatVector")}
   if (!hasvalue(datafolder)) {datafolder <- Sys.getenv("ff_datafolder")}
   if (datafolder == "") {stop("No environment variable for ff_datafolder and no datafolder parameter set")}
+  cat("datafolder: ", datafolder)
   inputdatafolder <- file.path(datafolder,"input")
   groundtruthdatafolder <- file.path(datafolder,"groundtruth")
+  cat("inputdatafolder: ", inputdatafolder)
+  cat("GTdatafolder: ", groundtruthdatafolder)
   hasgroundtruth <- F
   ########preprocess for by-country processing########
   data(gfw_tiles,envir = environment())
@@ -149,8 +152,8 @@ ff_prep <- function(datafolder=NA, country=NA, shape=NA, tiles=NULL, groundtruth
       if (length(tiles) > 1) {
         groundtruth_raster = NA
 
-        }else{
-          if (first) {
+      }else{
+        if (first) {
           if (length(grep(groundtruth_pattern,selected_files)) > 0) {
             hasgroundtruth <- T
             gtfile = selected_files[grep(groundtruth_pattern,selected_files)]
@@ -196,21 +199,21 @@ ff_prep <- function(datafolder=NA, country=NA, shape=NA, tiles=NULL, groundtruth
         dts <- dts[sample_indices,]
         sf_indices <- sf_indices[sample_indices]}
       if (hasvalue(dim(dts))) {
-      if (first) {
-        fdts <- dts
-        allindices = sf_indices
-      }else {
-        allindices <- c(allindices,sf_indices + length(allindices))
-        common_cols <- intersect(colnames(dts), colnames(fdts))
-        notin1 <- colnames(dts)[which(!(colnames(dts) %in% common_cols))]
-        notin2 <- colnames(fdts)[which(!(colnames(fdts) %in% common_cols))]
-        if (length(c(notin1,notin2)) > 0) {ff_cat(paste(i,": the following columns are dropped because they are not present in the entire time series: ",paste(c(notin1,notin2),collapse = ", ")),color="yellow")}
-        # Subset matrices based on common column names
-        # Merge matrices by column names
-        fdts <- rbind(fdts[, common_cols, drop = FALSE], dts[, common_cols, drop = FALSE])
-      }
-      fdts <- fdts[,order(colnames(fdts))]
-      first <- F}}
+        if (first) {
+          fdts <- dts
+          allindices = sf_indices
+        }else {
+          allindices <- c(allindices,sf_indices + length(allindices))
+          common_cols <- intersect(colnames(dts), colnames(fdts))
+          notin1 <- colnames(dts)[which(!(colnames(dts) %in% common_cols))]
+          notin2 <- colnames(fdts)[which(!(colnames(fdts) %in% common_cols))]
+          if (length(c(notin1,notin2)) > 0) {ff_cat(paste(i,": the following columns are dropped because they are not present in the entire time series: ",paste(c(notin1,notin2),collapse = ", ")),color="yellow")}
+          # Subset matrices based on common column names
+          # Merge matrices by column names
+          fdts <- rbind(fdts[, common_cols, drop = FALSE], dts[, common_cols, drop = FALSE])
+        }
+        fdts <- fdts[,order(colnames(fdts))]
+        first <- F}}
     if (verbose) {cat(paste("loading finished, features:",paste(newcolnames,collapse = ", "),"\n"))}
   }
   ######filter data based on features#######
@@ -246,4 +249,3 @@ ff_prep <- function(datafolder=NA, country=NA, shape=NA, tiles=NULL, groundtruth
   if (hasvalue(data_matrix$label)) {if (sum(data_matrix$label) == 0) {ff_cat("data contains no actuals, all labels are 0",color="yellow")}}
   return(list("data_matrix" = data_matrix,"validation_matrix" = validation_matrix,"testindices" = allindices,"groundtruthraster" = groundtruth_raster,features = colnames(fdts),"hasgroundtruth" = hasgroundtruth))
 }
-

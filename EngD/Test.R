@@ -1,7 +1,6 @@
 # library(ForestForesight)
-code_location <- "C:/Kodingan2/ForestForesight"
-ff_folder <- "C:/Kodingan2/FFdata"
-modelpath <- paste0(ff_folder, "/model/PER.model")
+code_location <- "C:/Kodingan3/ForestForesight"
+ff_folder <- "C:/Kodingan3/FFdata"
 library("devtools")
 load_all(code_location) # with this we are using the live R code, not the build package of ForestForesight
 library(sf)
@@ -19,7 +18,7 @@ for (proc_date in proc_dates) {
     country <- countrynames[x]
     if (country == "PER") {
       cat(paste("processing", country, "\n"))
-      setwd("C:/Kodingan2/FFdata/storage/predictions/")
+      setwd("C:/Kodingan3/FFdata/storage/predictions/")
       if (!dir.exists(country)) {
         dir.create(country)
       }
@@ -53,6 +52,9 @@ for (proc_date in proc_dates) {
             message("An error occurred: ", e$message)
           }
         )
+      }
+      else {
+        cat("cannot run prediction: ", paste0(country, "_", proc_date, ".tif"), " already exists!")
       }
     }
   }

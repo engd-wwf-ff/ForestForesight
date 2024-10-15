@@ -1,7 +1,7 @@
-library(ForestForesight)
 
 # Step 1: Set up the parameters
-ff_folder <- "/path/to/your/forestforesight/data"
+code_location <- "C:/Kodingan3/ForestForesight/"
+ff_folder <- "C:/Kodingan3/FFdata/"
 country_code <- "PER"
 train_start <- "2023-06-01"
 train_end <- "2023-12-31"
@@ -9,15 +9,20 @@ validation_start <- "2023-06-01"
 validation_end <- "2023-12-01"
 prediction_date <- "2024-01-01"
 
+# Step 1.5: Make sure we are using R codes in our local, not ForestForesight package from Github
+library("devtools")
+load_all(code_location) # with this we are using the live R code, not the build package of ForestForesight
+
+
 # Step 2: Create date ranges for training and validation
 train_dates <- ForestForesight::daterange(train_start, train_end)
 validation_dates <- ForestForesight::daterange(validation_start, validation_end)
 
 # Step 3: Set up file paths for saving results
-model_save_path <- "/path/to/save/peru_deforestation_model.model"
-predictions_save_path <- "/path/to/save/peru_deforestation_prediction.tif"
-accuracy_csv_path <- "/path/to/save/peru_deforestation_accuracy.csv"
-importance_csv_path <- "/path/to/save/peru_feature_importance.csv"
+model_save_path <- paste(ff_folder, "peru_deforestation_model.model")
+predictions_save_path <- paste(ff_folder, "peru_deforestation_prediction.tif")
+accuracy_csv_path <- paste(ff_folder, "peru_deforestation_accuracy.csv")
+importance_csv_path <- paste(ff_folder, "peru_feature_importance.csv")
 
 # Step 4: Run the ff_run function
 prediction_result <- ff_run(

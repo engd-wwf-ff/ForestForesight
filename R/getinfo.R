@@ -56,7 +56,6 @@ getinfo <- function(shape_or_iso, ff_dir = NULL, verbose = TRUE) {
     feature_name <- tools::file_path_sans_ext(last_part)
     return(feature_name)
   }
-
   # Load countries data
   countries <- terra::vect(get(data("countries",envir = environment())))
 
