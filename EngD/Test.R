@@ -43,7 +43,7 @@ for (proc_date in proc_dates) {
               prediction_dates = proc_date,
               ff_folder = ff_folder,
               verbose = TRUE,
-              #save_path = model_folder
+              # save_path = model_folder
               trained_model = modelpath
             )
             terra::writeRaster(b, paste0(country, "_", proc_date, ".tif"), overwrite = T)
@@ -52,8 +52,7 @@ for (proc_date in proc_dates) {
             message("An error occurred: ", e$message)
           }
         )
-      }
-      else {
+      } else {
         cat("cannot run prediction: ", paste0(country, "_", proc_date, ".tif"), " already exists!")
       }
     }
