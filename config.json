@@ -1,0 +1,7 @@
+{
+    "URL_MARKDOWN": "https://raw.githubusercontent.com/jduijvenbode-WWF/ForestForesight/main/README.md",
+    "AWS_BUCKET": "forestforesight-public",
+    "AWS_BUCKET_REGION": "eu-west-1"
+    // you can add another CONSTANT_VAR here (before adding a new line, do not forget to add comma)
+  }
+  

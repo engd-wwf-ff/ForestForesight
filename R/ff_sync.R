@@ -27,9 +27,21 @@
 #' }
 #'
 #' @export
+# Check if jsonlite is installed
+if (!requireNamespace("jsonlite", quietly = TRUE)) {
+  # Install jsonlite if not installed
+  install.packages("jsonlite")
+}
+library(jsonlite)
+
+cat("Hi..")
+# Read the config file
+config <- fromJSON("config.json")
+cat("Ho!")
+
+
 ff_sync <- function(ff_folder, identifier, download_model = FALSE, download_data = TRUE, download_predictions = FALSE, download_groundtruth = TRUE,
-                    bucket = "forestforesight-public", region = "eu-west-1", verbose = TRUE, sync_verbose = FALSE) {
-  cat("Hello wolrd")
+                    bucket = config$AWS_BUCKET, region = config$AWS_BUCKET_REGION, verbose = TRUE, sync_verbose = FALSE) {
     # Create ff_folder if it doesn't exist
   if (!dir.exists(ff_folder)) {
     dir.create(ff_folder, recursive = TRUE)
@@ -39,6 +51,7 @@ ff_sync <- function(ff_folder, identifier, download_model = FALSE, download_data
 
   # Determine if identifier is a tile, country code, or SpatVector
   if (class(identifier) == "character" && nchar(identifier) == 7 && grepl("^[0-9]{2}[NS]_[0-9]{3}[EW]$", identifier)) {
+    cat("The identifier is a tile!")
     tiles <- identifier
   } else if (inherits(identifier, "SpatVector")) {
     identifier <- terra::buffer(identifier, width = -1)

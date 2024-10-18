@@ -1,8 +1,18 @@
+# Check if jsonlite is installed
+if (!requireNamespace("jsonlite", quietly = TRUE)) {
+  # Install jsonlite if not installed
+  install.packages("jsonlite")
+}
+library(jsonlite)
+
+# Read the config file
+config <- fromJSON("config.json")
+
 get_feature_metadata=function(){
   library(utils)
 
   # URL of the Markdown file
-  url <- "https://raw.githubusercontent.com/jduijvenbode-WWF/ForestForesight/main/README.md"
+  url <- config$URL_MARKDOWN
 
   # Read the Markdown file
   markdown_text <- readLines(url)
