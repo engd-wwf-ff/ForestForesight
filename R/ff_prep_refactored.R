@@ -80,7 +80,6 @@ ff_prep_refactored <- function(datafolder = NA, country = NA, shape = NA, tiles 
 
   shape <- result$shape
   tiles <- result$tiles
-  tilesvect <- result$tilesvect
 
   ########## list files and exclude features######
 
@@ -253,7 +252,7 @@ preprocess_by_shape_or_country <- function(country, shape, tilesvect, tiles, ver
     }
   }
 
-  return(list(shape = shape, tiles = tiles, tilesvect = tilesvect))
+  return(list(shape = shape, tiles = tiles))
 }
 
 list_files_and_exclude_features <- function(datafolder = NA, tiles, groundtruth_pattern, verbose) {
